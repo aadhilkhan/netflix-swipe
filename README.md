@@ -1,127 +1,99 @@
+# Netflix & Decide
 
-<div align="center">
-  <h1>Constructa Starter Min</h1>
-  <p><strong>A modern Web App Starter Kit based on Tanstack Starter using React, shadcn/ui and Tailwind CSS 4</strong></p>
-  
-  [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://typescriptlang.org/)
-  [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
-  [![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-</div>
+**Tinder for Netflix shows.** Swipe on shows with your partner, then discover what you both love.
 
-## ✨ Features
+**[Live Demo](https://netflix-swipe.vercel.app)**
 
-- **[TanStack Start RC1](https://tanstack.com/start)** - Modern full-stack React framework
-- **[shadcn/ui](https://ui.shadcn.com/)** - Beautiful, accessible component library
-- **[Tailwind CSS v4](https://tailwindcss.com/)** - Modern utility-first CSS framework
-- **[TypeScript](https://typescriptlang.org/)** - Full type safety
-- **[TanStack Router](https://tanstack.com/router)** - Type-safe file-based routing
-- **[Browser Echo](https://github.com/browser-echo/browser-echo)** - Advanced client-side logging and debugging
-- **[Unplugin Icons](https://github.com/antfu/unplugin-icons)** - Automatic icon loading and optimization
+## How It Works
 
-## 🚀 Quick Start
+1. **Create a room** — one person starts a session and gets a 6-character code
+2. **Share the code** — your partner joins using the code
+3. **Swipe independently** — drag cards right to like, left to pass (or use the buttons)
+4. **See your matches** — when you both like the same show, it's a match
 
-### Prerequisites
-- **Node.js** 18+ 
-- **pnpm** (recommended package manager)
+## Features
 
-### Download
+- **Drag-to-swipe cards** with smooth framer-motion animations, LIKE/NOPE stamps, and spring physics
+- **Button controls** for like and pass with animated card exits
+- **Real-time match detection** — matches are detected instantly when both partners like the same show
+- **Match celebration overlay** with spring animation, auto-dismisses after 4 seconds
+- **Room-based multiplayer** via 6-character codes, partner status polling every 10 seconds
+- **Progress tracking** — see how far along you and your partner are
+- **~50 curated Netflix shows** with real poster images from TMDB
+- **Mobile-first dark UI** designed for couch use
+- **Geist font** for clean, modern typography
 
-```bash
-# Clone the starter template (replace with your repo)
-npx gitpick git@github.com:instructa/constructa-starter-min.git my-app
-cd my-app
+## Tech Stack
+
+| Technology | Purpose |
+|---|---|
+| [TanStack Start](https://tanstack.com/start) | Full-stack React framework with SSR |
+| [TanStack Router](https://tanstack.com/router) | Type-safe file-based routing |
+| [TanStack Query](https://tanstack.com/query) | Server state management and polling |
+| [Framer Motion](https://motion.dev) | Drag gestures and card animations |
+| [Tailwind CSS v4](https://tailwindcss.com) | Utility-first styling |
+| [Geist Font](https://vercel.com/font) | Sans and mono typefaces |
+| [Zod](https://zod.dev) | Input validation for server functions |
+| [TypeScript](https://typescriptlang.org) | Full type safety |
+
+## Project Structure
+
+```
+src/
+├── routes/
+│   ├── __root.tsx                  # Root layout (dark mode, Geist font)
+│   ├── index.tsx                   # Homepage — create or join a room
+│   └── swipe/
+│       ├── $roomId.tsx             # Swiping interface
+│       └── $roomId.matches.tsx     # Matches grid
+├── components/swipe/
+│   ├── SwipeCard.tsx               # Draggable card with framer-motion
+│   ├── CardStack.tsx               # Manages visible card stack (3 deep)
+│   ├── SwipeActions.tsx            # Like / Nope buttons
+│   ├── MatchCelebration.tsx        # "It's a Match!" overlay
+│   ├── MatchCard.tsx               # Card for the matches grid
+│   ├── RoomCodeDisplay.tsx         # Room code with copy-to-clipboard
+│   └── WaitingForPartner.tsx       # Waiting screen with animations
+├── server/function/
+│   └── swipe.ts                    # Server functions (create/join room, swipe, matches)
+├── lib/
+│   ├── shows/
+│   │   ├── data.ts                 # ~50 Netflix shows with TMDB poster URLs
+│   │   └── types.ts                # Show, Room, UserSwipes types
+│   └── swipe/
+│       └── queries.ts              # Query options and mutation hooks
+└── styles/
+    └── app.css                     # Tailwind v4 config with Geist font
 ```
 
-> **Recommended:** This starter uses [gitpick](https://github.com/nrjdalal/gitpick) for easy cloning without `.git` directory, making it perfect for creating new projects from this template.
+## Architecture
 
-### Installation
+- **Room state** is stored in an in-memory `Map<string, Room>` on the server — no database needed
+- **Identity** uses a random UUID stored in `sessionStorage` (no auth required)
+- **Show order** is shuffled per room so both partners see the same sequence
+- **Match detection** happens atomically on the server when a swipe is submitted
+- **Partner polling** uses `refetchInterval: 10_000` on the room state query
+
+## Getting Started
 
 ```bash
 # Install dependencies
 pnpm install
 
-# Start development server
+# Start dev server
 pnpm dev
 ```
 
-### Available Scripts
+Open [http://localhost:3000](http://localhost:3000) — create a room in one tab, join with the code in another.
+
+## Deployment
+
+Deployed on [Vercel](https://vercel.com). Push to `main` or run:
 
 ```bash
-# Development
-pnpm dev          # Start development server
-pnpm build        # Build for production
-pnpm start        # Start production server
-
-# Code Quality
-pnpm biome:check  # Check code formatting and linting
-pnpm biome:fix:unsafe # Fix code issues (unsafe)
+vercel deploy --prod
 ```
 
-## 📁 Project Structure
+## License
 
-```
-src/
-├── app/
-│   ├── routes/           # File-based routing
-│   │   ├── __root.tsx   # Root layout
-│   │   ├── index.tsx    # Home page
-│   │   └── api/         # API routes
-│   └── styles/          # Global styles
-├── components/
-│   └── ui/              # shadcn/ui components
-└── utils/               # Utility functions
-```
-
-## 🎯 Core Technologies
-
-| Technology | Purpose | Documentation |
-|------------|---------|---------------|
-| **TanStack Start RC1** | Full-stack framework | [Docs](https://tanstack.com/start) |
-| **shadcn/ui** | Component library | [Docs](https://ui.shadcn.com/) |
-| **Tailwind CSS v4** | Styling framework | [Docs](https://tailwindcss.com/) |
-| **TypeScript** | Type safety | [Docs](https://typescriptlang.org/) |
-| **Browser Echo** | Client-side logging | [Docs](https://github.com/browser-echo/browser-echo) |
-| **Unplugin Icons** | Icon optimization | [Docs](https://github.com/antfu/unplugin-icons) |
-
-## 🔧 Configuration
-
-### Adding shadcn/ui Components
-```bash
-# Add new components
-npx shadcn@latest add button
-npx shadcn@latest add card
-npx shadcn@latest add input
-```
-
-### Tailwind CSS
-- Uses Tailwind CSS v4 with modern CSS-first configuration
-- Configured in `app.config.ts`
-- Global styles in `src/app/styles/`
-
-### TypeScript
-- **Path aliases**: `@` resolves to the root `./` directory
-- **Route files**: Must use `.tsx` extension
-
-## 🚀 Deployment
-
-### Build for Production
-```bash
-pnpm build
-```
-
-### Start Production Server
-```bash
-pnpm start
-```
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-<div align="center">
-  <p>Built with ❤️ using modern React tools</p>
-</div>
-
-
+MIT
