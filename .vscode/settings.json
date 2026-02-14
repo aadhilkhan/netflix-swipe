@@ -1,0 +1,41 @@
+{
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit"
+    },
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[javascriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[json]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[jsonc]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "files.watcherExclude": {
+        "**/routeTree.gen.ts": true,
+        "**/.tanstack/**/*": true,
+        "pnpm-lock.yaml": true
+    },
+    "search.exclude": {
+        "**/routeTree.gen.ts": true,
+        "**/.tanstack/**/*": true,
+        "pnpm-lock.yaml": true
+    },
+    "files.readonlyInclude": {
+        "**/routeTree.gen.ts": true,
+        "**/.tanstack/**/*": true,
+        "pnpm-lock.yaml": true
+    },
+    "typescript.tsdk": "./node_modules/typescript/lib"
+}
