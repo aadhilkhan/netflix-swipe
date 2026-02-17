@@ -22,6 +22,10 @@ export function MatchCelebration({ show, onDismiss }: MatchCelebrationProps) {
       onClick={onDismiss}
     >
       <motion.div
+        role="dialog"
+        aria-modal="true"
+        aria-label={`Match found for ${show.title}`}
+        onClick={(event) => event.stopPropagation()}
         initial={{ scale: 0, rotate: -20 }}
         animate={{ scale: 1, rotate: 0 }}
         transition={{ type: 'spring', stiffness: 200, damping: 15, delay: 0.1 }}

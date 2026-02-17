@@ -493,6 +493,8 @@ export const SHOWS: Show[] = [
   },
 ];
 
+const SHOWS_BY_ID = new Map(SHOWS.map((show) => [show.id, show]));
+
 export function getShowById(id: string): Show | undefined {
-  return SHOWS.find((s) => s.id === id);
+  return SHOWS_BY_ID.get(id);
 }

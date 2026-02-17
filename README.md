@@ -69,7 +69,7 @@ src/
 ## Architecture
 
 - **Room state** is stored in an in-memory `Map<string, Room>` on the server — no database needed
-- **Identity** uses a random UUID stored in `sessionStorage` (no auth required)
+- **Identity** uses a typed `sid` UUID in the URL search params (no auth required)
 - **Show order** is shuffled per room so both partners see the same sequence
 - **Match detection** happens atomically on the server when a swipe is submitted
 - **Partner polling** uses `refetchInterval: 10_000` on the room state query

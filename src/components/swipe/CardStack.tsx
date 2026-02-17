@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import { SwipeCard } from './SwipeCard';
 import type { Show } from '~/lib/shows/types';
 

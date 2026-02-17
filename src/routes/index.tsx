@@ -1,50 +1,49 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { ClientOnly } from '@tanstack/react-router';
+import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
+import { z } from 'zod';
 import { Button } from '~/components/ui/button';
 import { useCreateRoomMutation, useJoinRoomMutation } from '~/lib/swipe/queries';
 
+const searchSchema = z.object({
+  sid: z.string().uuid().optional(),
+});
+
 export const Route = createFileRoute('/')({
+  validateSearch: searchSchema,
+  beforeLoad: ({ search }) => {
+    if (search.sid) return;
+
+    throw redirect({
+      to: '/',
+      search: {
+        sid: crypto.randomUUID(),
+      },
+      replace: true,
+    });
+  },
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  return (
-    <ClientOnly fallback={<LandingSkeleton />}>
-      <SwipeLanding />
-    </ClientOnly>
-  );
+  const { sid } = Route.useSearch();
+  if (!sid) return null;
+  return <SwipeLanding sessionId={sid} />;
 }
 
-function LandingSkeleton() {
-  return (
-    <div className="flex min-h-svh flex-col items-center justify-center gap-8 p-4">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold">Netflix & Decide</h1>
-        <p className="mt-2 text-zinc-400">Loading...</p>
-      </div>
-    </div>
-  );
-}
-
-function SwipeLanding() {
+function SwipeLanding({ sessionId }: { sessionId: string }) {
   const navigate = useNavigate();
   const [joinCode, setJoinCode] = useState('');
-  const [sessionId] = useState(() => {
-    const existing = sessionStorage.getItem('swipe-session-id');
-    if (existing) return existing;
-    const id = crypto.randomUUID();
-    sessionStorage.setItem('swipe-session-id', id);
-    return id;
-  });
-
   const createRoomMutation = useCreateRoomMutation();
   const joinRoomMutation = useJoinRoomMutation();
 
   const handleCreate = () => {
     createRoomMutation.mutate(sessionId, {
       onSuccess: (data) => {
-        navigate({ to: '/swipe/$roomId', params: { roomId: data.code } });
+        navigate({
+          to: '/swipe/$roomId',
+          params: { roomId: data.code },
+          search: { sid: sessionId },
+        });
       },
     });
   };
@@ -55,7 +54,11 @@ function SwipeLanding() {
       { code: joinCode.toUpperCase(), sessionId },
       {
         onSuccess: (data) => {
-          navigate({ to: '/swipe/$roomId', params: { roomId: data.code } });
+          navigate({
+            to: '/swipe/$roomId',
+            params: { roomId: data.code },
+            search: { sid: sessionId },
+          });
         },
       },
     );
