@@ -34,6 +34,9 @@ src/routeTree.gen.ts
 .ck
 .spezi
 
+# Local Claude configuration (may contain sensitive settings)
+/.claude/settings.local.json
+
 # START Ruler Generated Files
 /.codex/config.toml
 /.codex/config.toml.bak
